@@ -1,6 +1,6 @@
 # MERN Web3 Todo
 
-![MERN Web3 Todo](https://raw.githubusercontent.com/yourusername/mern-web3-todo/main/client/public/logo.svg)
+![MERN Web3 Todo](https://raw.githubusercontent.com/AndrewDonelson/mern-web3-todo/main/client/public/logo.svg)
 
 A decentralized todo application built with MERN stack (MongoDB, Express, React, Node.js) and blockchain technologies. Securely manage your tasks while leveraging the power of distributed technologies.
 
