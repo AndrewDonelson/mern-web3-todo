@@ -14,14 +14,35 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { formatWalletAddress, copyToClipboard } from '@/lib/utils';
 
+// Type definition for window.ethereum
+declare global {
+  interface Window {
+    ethereum?: {
+      request: (args: { method: string; params?: any[] }) => Promise<any>;
+      isMetaMask?: boolean;
+      isCoinbaseWallet?: boolean;
+    };
+  }
+}
+
+// Type for wallet data
+interface WalletData {
+  id: string;
+  name: string;
+  address: string;
+  type: string;
+  isPrimary: boolean;
+  lastUsed: string;
+  connectedSince: string;
+}
+
 // Mock connected wallets data
-const mockWallets = [
+const mockWallets: WalletData[] = [
   {
     id: 'wallet1',
     name: 'MetaMask Primary',
@@ -44,7 +65,7 @@ const mockWallets = [
 
 export const ConnectedWallets: React.FC = () => {
   const { toast } = useToast();
-  const [wallets, setWallets] = useState(mockWallets);
+  const [wallets, setWallets] = useState<WalletData[]>(mockWallets);
   const [isAddWalletOpen, setIsAddWalletOpen] = useState(false);
   const [isConfirmRemoveOpen, setIsConfirmRemoveOpen] = useState(false);
   const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
@@ -163,7 +184,18 @@ export const ConnectedWallets: React.FC = () => {
       
       // Request account access
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-      const newAddress = accounts[0];
+      
+      // Check if accounts array exists and has at least one account
+      if (!accounts || !Array.isArray(accounts) || accounts.length === 0) {
+        toast({
+          title: "No accounts found",
+          description: "Please unlock your wallet and try again",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      const newAddress = accounts[0] as string;
       
       // Check if wallet is already connected
       if (wallets.some(wallet => wallet.address.toLowerCase() === newAddress.toLowerCase())) {
@@ -176,7 +208,7 @@ export const ConnectedWallets: React.FC = () => {
       }
       
       // Add the new wallet
-      const newWallet = {
+      const newWallet: WalletData = {
         id: `wallet${Date.now()}`,
         name: `${newWalletType} Wallet`,
         address: newAddress,

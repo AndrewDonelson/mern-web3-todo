@@ -1,5 +1,5 @@
 // file: client/craco.config.js
-// description: CRACO configuration for path aliases
+// description: Configuration for Create React App to support path aliases
 // module: Client
 // License: MIT
 // Author: Andrew Donelson

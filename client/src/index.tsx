@@ -11,7 +11,7 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import './global.css';
 import reportWebVitals from './reportWebVitals';
-import { ThemeProvider } from '@/components/theme-provider';
+import { ThemeProvider } from './components/theme-provider';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

@@ -9,7 +9,6 @@ import React, { useEffect, useState } from 'react';
 import { 
   CheckCircle2, 
   Clock, 
-  LayoutDashboard, 
   ListTodo, 
   Plus, 
   Settings, 
@@ -23,6 +22,17 @@ import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { StatCard } from '@/components/Dashboard/StatCard';
 import { RecentTasksList } from '@/components/Dashboard/RecentTasksList';
 import { CreateTaskDialog } from '@/components/Dashboard/CreateTaskDialog';
+
+// Type definition for window.ethereum
+declare global {
+  interface Window {
+    ethereum?: {
+      request: (args: { method: string; params?: any[] }) => Promise<any>;
+      isMetaMask?: boolean;
+      isCoinbaseWallet?: boolean;
+    };
+  }
+}
 
 // Mock data for statistics
 const mockStats = [
@@ -44,19 +54,37 @@ const Dashboard: React.FC = () => {
       try {
         if (window.ethereum) {
           const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-          if (accounts.length > 0) {
+          
+          // Check if accounts exist and has items
+          if (accounts && Array.isArray(accounts) && accounts.length > 0) {
             setIsWalletConnected(true);
-            setWalletAddress(accounts[0]);
+            setWalletAddress(accounts[0] as string);
           } else {
-            // Prompt user to connect their wallet
-            const requestedAccounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-            if (requestedAccounts.length > 0) {
-              setIsWalletConnected(true);
-              setWalletAddress(requestedAccounts[0]);
+            try {
+              // Prompt user to connect their wallet
+              const requestedAccounts = await window.ethereum.request({ 
+                method: 'eth_requestAccounts' 
+              });
+              
+              // Check if requested accounts exist and has items
+              if (requestedAccounts && Array.isArray(requestedAccounts) && requestedAccounts.length > 0) {
+                setIsWalletConnected(true);
+                setWalletAddress(requestedAccounts[0] as string);
+                toast({
+                  title: "Wallet connected",
+                  description: "Your wallet has been connected successfully.",
+                  variant: "success",
+                });
+              } else {
+                throw new Error("No accounts found");
+              }
+            } catch (connectionError: any) {
+              // User might have rejected the connection request
+              console.error('User rejected connection:', connectionError);
               toast({
-                title: "Wallet connected",
-                description: "Your wallet has been connected successfully.",
-                variant: "success",
+                title: "Connection canceled",
+                description: "You need to connect your wallet to use the application.",
+                variant: "destructive",
               });
             }
           }

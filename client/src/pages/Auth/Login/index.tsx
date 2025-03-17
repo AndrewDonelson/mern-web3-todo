@@ -15,6 +15,17 @@ import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { AuthLayout } from '@/components/Auth/AuthLayout';
 
+// Type definition for window.ethereum
+declare global {
+  interface Window {
+    ethereum?: {
+      request: (args: { method: string; params?: any[] }) => Promise<any>;
+      isMetaMask?: boolean;
+      isCoinbaseWallet?: boolean;
+    };
+  }
+}
+
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -36,9 +47,9 @@ const LoginPage: React.FC = () => {
 
       // Request account access
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-      const account = accounts[0];
-
-      if (!account) {
+      
+      // Check if accounts array exists and has at least one account
+      if (!accounts || !Array.isArray(accounts) || accounts.length === 0) {
         toast({
           title: "Connection failed",
           description: "Failed to connect to your wallet. Please try again.",
@@ -46,6 +57,8 @@ const LoginPage: React.FC = () => {
         });
         return;
       }
+      
+      const account = accounts[0] as string;
 
       // Get signature to verify ownership (simplified for now)
       const message = `Web3 Todo Login Request\nNonce: ${Date.now()}`;

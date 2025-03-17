@@ -7,12 +7,22 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, CheckCircle, Github } from 'lucide-react';
+import { 
+  ArrowRight, 
+  CheckCircle, 
+  Github,
+  Shield,
+  Database,
+  Wallet,
+  ListTodo,
+  Users,
+  Moon
+} from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
-import { HeroSection } from './HeroSection';
-import { FeatureCard } from './FeatureCard';
+import { HeroSection } from '@/components/Landing/HeroSection';
+import { FeatureCard } from '@/components/Landing/FeatureCard';
 import { Footer } from '@/components/layout/Footer';
 
 const LandingPage: React.FC = () => {
@@ -93,32 +103,32 @@ const LandingPage: React.FC = () => {
             <FeatureCard
               title="Immutable Records"
               description="Store your tasks securely on the blockchain with permanent records that can't be altered."
-              icon="Shield"
+              Icon={Shield}
             />
             <FeatureCard
               title="Decentralized Storage"
               description="Your tasks are stored across a distributed network, eliminating single points of failure."
-              icon="Database"
+              Icon={Database}
             />
             <FeatureCard
               title="Wallet Authentication"
               description="No username or password needed. Connect with your crypto wallet for secure login."
-              icon="Wallet"
+              Icon={Wallet}
             />
             <FeatureCard
               title="Task Prioritization"
               description="Organize your tasks with priority levels and deadlines to stay on top of what matters."
-              icon="ListTodo"
+              Icon={ListTodo}
             />
             <FeatureCard
               title="Collaborative Tasks"
               description="Share and assign tasks to team members for better collaboration."
-              icon="Users"
+              Icon={Users}
             />
             <FeatureCard
               title="Dark Mode Support"
               description="Easy on the eyes with full dark mode support for late-night productivity."
-              icon="Moon"
+              Icon={Moon}
             />
           </div>
         </section>
