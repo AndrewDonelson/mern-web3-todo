@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <!-- Definitions for gradients -->
+  <defs>
+    <linearGradient id="circleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3e7cf7" stop-opacity="0.05" />
+      <stop offset="100%" stop-color="#3e7cf7" stop-opacity="0.15" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Circle with gradient background -->
+  <circle cx="200" cy="200" r="190" fill="url(#circleGradient)" stroke="#3e7cf7" stroke-width="8" />
+  
+  <!-- Blockchain Hexagon Pattern -->
+  <g opacity="0.15">
+    <path d="M130,100 L170,80 L210,100 L210,140 L170,160 L130,140 Z" fill="#3e7cf7" />
+    <path d="M210,100 L250,80 L290,100 L290,140 L250,160 L210,140 Z" fill="#3e7cf7" />
+    <path d="M170,160 L210,140 L250,160 L250,200 L210,220 L170,200 Z" fill="#3e7cf7" />
+    <path d="M90,160 L130,140 L170,160 L170,200 L130,220 L90,200 Z" fill="#3e7cf7" />
+    <path d="M250,160 L290,140 L330,160 L330,200 L290,220 L250,200 Z" fill="#3e7cf7" />
+    <path d="M130,220 L170,200 L210,220 L210,260 L170,280 L130,260 Z" fill="#3e7cf7" />
+    <path d="M210,220 L250,200 L290,220 L290,260 L250,280 L210,260 Z" fill="#3e7cf7" />
+  </g>
+  
+  <!-- Todo Checkboxes -->
+  <g transform="translate(120, 150)">
+    <!-- Checkbox 1 (Checked) -->
+    <rect x="10" y="10" width="30" height="30" rx="4" ry="4" fill="#3e7cf7" />
+    <path d="M15,25 L25,35 L45,15" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+    
+    <!-- Checkbox 2 (Checked) -->
+    <rect x="10" y="60" width="30" height="30" rx="4" ry="4" fill="#3e7cf7" />
+    <path d="M15,75 L25,85 L45,65" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+    
+    <!-- Checkbox 3 (Unchecked) -->
+    <rect x="10" y="110" width="30" height="30" rx="4" ry="4" fill="none" stroke="#3e7cf7" stroke-width="3" />
+    
+    <!-- Task Lines -->
+    <line x1="60" y1="25" x2="160" y2="25" stroke="#3e7cf7" stroke-width="8" stroke-linecap="round" />
+    <line x1="60" y1="75" x2="140" y2="75" stroke="#3e7cf7" stroke-width="8" stroke-linecap="round" />
+    <line x1="60" y1="125" x2="180" y2="125" stroke="#3e7cf7" stroke-width="8" stroke-linecap="round" />
+  </g>
+  
+  <!-- Web3 Connection Icon -->
+  <g transform="translate(290, 80)">
+    <circle cx="0" cy="0" r="28" fill="#3e7cf7" />
+    <path d="M-14,-8 L14,8 M-14,8 L14,-8 M0,-16 L0,16" stroke="white" stroke-width="4" stroke-linecap="round" />
+  </g>
+  
+  <!-- MERN Letters at Bottom -->
+  <g transform="translate(200, 340)" text-anchor="middle">
+    <text font-family="Arial, sans-serif" font-weight="bold" font-size="40" fill="#3e7cf7">
+      MERN<tspan fill="#333333">W3</tspan>
+    </text>
+  </g>
+</svg>
