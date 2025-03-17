@@ -1,0 +1,32 @@
+{
+  "name": "mern-web3-todo",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "npm-run-all --parallel dev:*",
+    "dev:frontend": "cd client && npm run start",
+    "dev:backend": "cd server && nodemon index.js",
+    "dev:blockchain": "ganache-cli",
+    "install:all": "npm install && npm run install:client && npm run install:server",
+    "install:client": "cd client && npm install",
+    "install:server": "cd server && npm install",
+    "setup": "node setup.mjs",
+    "build": "npm-run-all --sequential build:*",
+    "build:client": "cd client && npm run build",
+    "build:contract": "truffle compile && truffle migrate",
+    "test": "npm-run-all --sequential test:*",
+    "test:contract": "truffle test",
+    "test:client": "cd client && npm run test",
+    "test:server": "cd server && npm run test"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "web3": "^1.10.2"
+  },
+  "devDependencies": {
+    "ganache-cli": "^6.12.2",
+    "nodemon": "^3.0.1",
+    "npm-run-all": "^4.1.5",
+    "truffle": "^5.11.5"
+  }
+}
