@@ -160,7 +160,7 @@ The hybrid system offers multiple configuration options:
 
 1. Clone the repository
    ```bash
-   git clone https://github.com/yourusername/mern-web3-todo.git
+   git clone https://github.com/AndrewDonelson/mern-web3-todo.git
    cd mern-web3-todo
    ```
 
