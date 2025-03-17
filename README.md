@@ -1,6 +1,5 @@
+<img src="https://raw.githubusercontent.com/AndrewDonelson/mern-web3-todo/main/client/public/logo.svg" alt="MERN Web3 Todo" width="256" height="256" /><br />
 # MERN Web3 Todo
-
-![MERN Web3 Todo](https://raw.githubusercontent.com/AndrewDonelson/mern-web3-todo/main/client/public/logo.svg)
 
 A decentralized todo application built with MERN stack (MongoDB, Express, React, Node.js) and blockchain technologies. Securely manage your tasks while leveraging the power of distributed technologies.
 
@@ -132,9 +131,9 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Contact
 
-Andrew Donelson - [@your_twitter](https://twitter.com/your_twitter) - your.email@example.com
+Andrew Donelson - [@AndrewDonelson](https://x.com/AndrewDonelson)
 
-Project Link: [https://github.com/yourusername/mern-web3-todo](https://github.com/yourusername/mern-web3-todo)
+Project Link: [https://github.com/AndrewDonelson/mern-web3-todo](https://github.com/AndrewDonelson/mern-web3-todo)
 
 ## Acknowledgments
 
