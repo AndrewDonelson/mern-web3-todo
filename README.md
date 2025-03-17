@@ -50,6 +50,83 @@ Beyond personal skill development, this project also serves as my own reference 
 - **Dark/Light Mode**: Choose your preferred theme
 - **Optimized Performance**: Fast loading and responsive interactions
 
+## MongoDB/Blockchain Hybrid Storage System
+
+This project features a unique hybrid storage architecture that combines the speed and flexibility of MongoDB with the security and immutability of blockchain.
+
+### How It Works
+
+#### Architecture Overview
+
+The hybrid storage system consists of:
+
+1. **MongoDB Layer**: Primary database for storing complete document data
+2. **Blockchain Layer**: Immutable verification layer to store document hashes
+3. **Connector Layer**: Services that bridge MongoDB and blockchain operations
+
+#### Data Flow and Verification
+
+1. **Document Creation**:
+   - Data is first saved to MongoDB
+   - A secure hash of the document is generated
+   - The hash is stored on the blockchain via a smart contract
+
+2. **Document Retrieval**:
+   - Data is retrieved from MongoDB for performance
+   - Optionally, integrity verification is performed by comparing the current document hash against the stored blockchain hash
+
+3. **Document Updates**:
+   - MongoDB document is updated
+   - A new hash is generated and stored on the blockchain
+   - History of changes is maintained for auditability
+
+4. **Batch Operations**:
+   - Multiple documents can be verified in a single blockchain transaction
+   - Reduces gas costs while maintaining security
+
+#### Smart Contract Integration
+
+The system uses a custom `DBVerification` smart contract that provides:
+
+- Hash storage and retrieval functions
+- Verification and integrity checking
+- Operation permissioning and access control
+- Document archiving functionality
+
+#### Health Monitoring and Recovery
+
+- Real-time health checks for both MongoDB and blockchain connections
+- Automatic recovery mechanisms for connection failures
+- Rate limiting and throttling for blockchain operations
+- Detailed diagnostics and system status APIs
+
+### Advantages
+
+- **Security with Performance**: MongoDB's query performance with blockchain's immutability
+- **Tamper Protection**: Data modifications can be detected by comparing hashes
+- **Cost Efficiency**: Minimize blockchain storage costs by only storing verification hashes
+- **Scalability**: MongoDB handles large datasets while blockchain ensures integrity
+- **Flexibility**: Choose which data requires blockchain verification
+- **Transparent Verification**: Easily audit data integrity at any time
+- **Graceful Degradation**: System remains operational even if blockchain is temporarily unavailable
+
+### Limitations
+
+- **Write Latency**: Blockchain verification adds some latency to write operations
+- **Gas Costs**: Each verification transaction requires blockchain gas fees
+- **Complexity**: Added system complexity compared to traditional storage
+- **Synchronization**: Requires careful handling to maintain consistency between systems
+- **Partial Protection**: Only protects against content tampering, not unauthorized access
+
+### Configuration Options
+
+The hybrid system offers multiple configuration options:
+
+- **Verification Modes**: Immediate, batched, or manual verification
+- **Recovery Settings**: Automated or manual recovery procedures
+- **Throttling Controls**: Rate limits for blockchain operations
+- **Integrity Checking**: On-demand or scheduled verification
+
 ## Tech Stack
 
 ### Frontend

@@ -6,7 +6,7 @@
 // Copyright 2025 Andrew Donelson
 
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   ArrowLeft,
   CalendarClock,

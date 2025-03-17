@@ -6,11 +6,11 @@
 // Copyright 2025 Andrew Donelson
 
 import React, { useState, useEffect } from 'react';
-import { User, Settings, Shield, History, Wallet, Copy, CheckCircle2, EditIcon } from 'lucide-react';
+import { User, Shield, History, Wallet, Copy, CheckCircle2, EditIcon } from 'lucide-react';
 
 import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
