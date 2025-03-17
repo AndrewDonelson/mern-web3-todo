@@ -1,3 +1,9 @@
+// file: ./client/src/App.js
+// description: This file is the main component for the client application.
+// module: client
+// author: Andrew Donelson
+// license: MIT
+// copyright: 2025, Andrew Donelson
 import logo from './logo.svg';
 import './App.css';
 

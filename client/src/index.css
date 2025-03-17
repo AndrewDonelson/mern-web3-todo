@@ -1,3 +1,11 @@
+/* 
+file: ./client/src/index.js
+description: This file is the entry point for the client application.
+module: client
+author: Andrew Donelson
+license: MIT
+copyright: 2025, Andrew Donelson
+*/
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',

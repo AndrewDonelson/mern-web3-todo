@@ -1,5 +1,11 @@
+// file: ./contracts/TodoList.sol
+// description: A simple TodoList contract that works with Solidity 0.7.6
+// module: contracts
+// author: Andrew Donelson
+// license: MIT
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+// copyright: 2025, Andrew Donelson
+pragma solidity >=0.7.0 <0.9.0;
 
 contract TodoList {
     uint public taskCount = 0;

@@ -1,3 +1,9 @@
+// file: ./client/src/index.js
+// description: This file is the entry point for the client application.
+// module: client
+// author: Andrew Donelson
+// license: MIT
+// copyright: 2025, Andrew Donelson
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';

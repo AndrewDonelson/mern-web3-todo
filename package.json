@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "npm-run-all --parallel dev:*",
+    "dev": "concurrently --names \"BLOCKCHAIN,BACKEND,FRONTEND\" --prefix-colors \"yellow,blue,green\" \"npm run dev:blockchain\" \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:frontend": "cd client && npm run start",
     "dev:backend": "cd server && nodemon index.js",
     "dev:blockchain": "ganache-cli",
@@ -20,6 +20,7 @@
     "test:server": "cd server && npm run test"
   },
   "dependencies": {
+    "concurrently": "^9.1.2",
     "dotenv": "^16.4.5",
     "web3": "^1.10.2"
   },

@@ -1,4 +1,9 @@
-// file: setup.mjs
+// file: ./setup.mjs
+// description: Setup script for MERN Web3 Todo App
+// module: project
+// author: Andrew Donelson
+// license: MIT
+// copyright: 2025, Andrew Donelson
 import fs from "fs";
 import { config as loadEnvFile } from "dotenv";
 import { execSync } from "child_process";

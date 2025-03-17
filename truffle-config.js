@@ -1,3 +1,10 @@
+// file: ./truffle-config.js
+// description: Truffle configuration file updated to use compatible Solidity compiler version
+// module: Blockchain
+// author: Andrew Donelson
+// license: MIT
+// copyright: 2025, Andrew Donelson
+
 /**
  * Use this file to configure your truffle project. It's seeded with some
  * common settings for different networks and features like migrations,
@@ -100,13 +107,13 @@ module.exports = {
 
   // Set default mocha options here, use special reporters, etc.
   mocha: {
-    // timeout: 100000
+    timeout: 100000
   },
 
   // Configure your compilers
   compilers: {
     solc: {
-      version: "0.8.19",      // Fetch exact version from solc-bin (default: truffle's version)
+      version: "0.7.6",      // Fetch exact version from solc-bin (default: truffle's version)
       // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
       settings: {          // See the solidity docs for advice about optimization and evmVersion
         optimizer: {
