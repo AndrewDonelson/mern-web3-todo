@@ -223,7 +223,7 @@ export const SecuritySettings: React.FC = () => {
           <div className="rounded-md bg-muted p-3">
             <div className="text-xs font-mono break-all">
               {/* Mock API key - would come from backend in real app */}
-              {process.env.REACT_APP_API_KEY || "sk_test_••••••••••••••••••••••••"}
+              {process.env.REACT_APP_API_KEY || "sk_test"}
             </div>
           </div>
           <p className="text-xs text-muted-foreground">
