@@ -27,7 +27,7 @@ export const Footer: React.FC = () => {
             </p>
             <div className="mt-4 flex gap-4">
               <a 
-                href="https://github.com/your-repo/web3-todo" 
+                href="https://github.com/AndrewDonelson/mern-web3-todo" 
                 target="_blank" 
                 rel="noreferrer"
                 aria-label="GitHub"
@@ -36,16 +36,16 @@ export const Footer: React.FC = () => {
                 <Github className="h-5 w-5" />
               </a>
               <a 
-                href="https://twitter.com/web3todo" 
+                href="https://x.com/web3todo#fake" 
                 target="_blank" 
                 rel="noreferrer"
-                aria-label="Twitter"
+                aria-label="X"
                 className="text-muted-foreground transition-colors hover:text-foreground"
               >
                 <Twitter className="h-5 w-5" />
               </a>
               <a 
-                href="https://instagram.com/web3todo" 
+                href="https://instagram.com/web3todo#fake" 
                 target="_blank" 
                 rel="noreferrer"
                 aria-label="Instagram"
@@ -75,25 +75,6 @@ export const Footer: React.FC = () => {
             </nav>
           </div>
 
-          {/* Company Links */}
-          <div className="flex flex-col">
-            <h3 className="mb-4 text-sm font-medium">Company</h3>
-            <nav className="flex flex-col gap-2">
-              <Link to="/about" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
-                About
-              </Link>
-              <Link to="/blog" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
-                Blog
-              </Link>
-              <Link to="/careers" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
-                Careers
-              </Link>
-              <Link to="/contact" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
-                Contact
-              </Link>
-            </nav>
-          </div>
-
           {/* Legal Links */}
           <div className="flex flex-col">
             <h3 className="mb-4 text-sm font-medium">Legal</h3>
@@ -114,7 +95,7 @@ export const Footer: React.FC = () => {
         <div className="mt-8 border-t pt-8">
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
             <p className="text-center text-sm text-muted-foreground md:text-left">
-              &copy; {currentYear} Web3 Todo. All rights reserved.
+              &copy; {currentYear} Andrew Donelson. All rights reserved.
             </p>
             <p className="text-center text-sm text-muted-foreground md:text-right">
               Crafted with care by <a href="https://andrewdonelson.com" className="text-primary underline hover:no-underline">Andrew Donelson</a>

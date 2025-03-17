@@ -43,7 +43,7 @@ const LandingPage: React.FC = () => {
               How it works
             </a>
             <a 
-              href="https://github.com/your-repo/web3-todo" 
+              href="https://github.com/AndrewDonelson/mern-web3-todo" 
               target="_blank" 
               rel="noreferrer" 
               className="flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary"
