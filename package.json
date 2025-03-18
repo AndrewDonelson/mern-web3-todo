@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently --names \"BLOCKCHAIN,BACKEND,FRONTEND\" --prefix-colors \"yellow,blue,green\" \"npm run dev:blockchain\" \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev": "concurrently --kill-others-on-fail --names \"BLOCKCHAIN,BACKEND,FRONTEND\" --prefix-colors \"yellow,blue,green\" \"npm run dev:blockchain\" \"sleep 5 && npm run dev:backend\" \"sleep 7 && npm run dev:frontend\"",
     "dev:frontend": "cd client && npm run start",
     "dev:backend": "cd server && nodemon index.js",
-    "dev:blockchain": "ganache-cli",
+    "dev:blockchain": "ganache-cli --networkId 1337",
     "install:all": "npm install && npm run install:client && npm run install:server",
     "install:client": "cd client && npm install",
     "install:server": "cd server && npm install",
