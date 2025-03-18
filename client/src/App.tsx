@@ -6,11 +6,9 @@
 // Copyright 2025 Andrew Donelson
 
 import { Routes, Route } from 'react-router-dom';
-// Use relative path for imports until path aliases are properly configured
-import { Toaster } from './components/ui/sonner';
-import LandingPage from './pages/Landing';
-
 import React, { Suspense } from 'react';
+import { RootLayout } from './components/layout/RootLayout';
+import LandingPage from './pages/Landing';
 
 // Lazy-loaded components to improve initial load time
 const Dashboard = React.lazy(() => import('./pages/Dashboard'));
@@ -20,41 +18,48 @@ const TodoDetailPage = React.lazy(() => import('./pages/Todo/Detail'));
 const LoginPage = React.lazy(() => import('./pages/Auth/Login'));
 const RegisterPage = React.lazy(() => import('./pages/Auth/Register'));
 
+// Loading component for Suspense fallback
+const LoadingFallback = () => (
+  <div className="flex h-screen items-center justify-center">
+    <div className="text-primary">Loading...</div>
+  </div>
+);
+
 function App() {
   return (
-    <>
+    <RootLayout>
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={
-          <Suspense fallback={<div className="flex h-screen items-center justify-center">Loading...</div>}>
+          <Suspense fallback={<LoadingFallback />}>
             <LoginPage />
           </Suspense>
         } />
         <Route path="/register" element={
-          <Suspense fallback={<div className="flex h-screen items-center justify-center">Loading...</div>}>
+          <Suspense fallback={<LoadingFallback />}>
             <RegisterPage />
           </Suspense>
         } />
         
         {/* Protected routes - will be enhanced with auth protection later */}
         <Route path="/dashboard" element={
-          <Suspense fallback={<div className="flex h-screen items-center justify-center">Loading...</div>}>
+          <Suspense fallback={<LoadingFallback />}>
             <Dashboard />
           </Suspense>
         } />
         <Route path="/profile" element={
-          <Suspense fallback={<div className="flex h-screen items-center justify-center">Loading...</div>}>
+          <Suspense fallback={<LoadingFallback />}>
             <ProfilePage />
           </Suspense>
         } />
         <Route path="/todos" element={
-          <Suspense fallback={<div className="flex h-screen items-center justify-center">Loading...</div>}>
+          <Suspense fallback={<LoadingFallback />}>
             <TodoHomePage />
           </Suspense>
         } />
         <Route path="/todos/:id" element={
-          <Suspense fallback={<div className="flex h-screen items-center justify-center">Loading...</div>}>
+          <Suspense fallback={<LoadingFallback />}>
             <TodoDetailPage />
           </Suspense>
         } />
@@ -62,10 +67,7 @@ function App() {
         {/* Not found route */}
         <Route path="*" element={<NotFound />} />
       </Routes>
-      
-      {/* Toast notifications - globally accessible */}
-      <Toaster />
-    </>
+    </RootLayout>
   );
 }
 

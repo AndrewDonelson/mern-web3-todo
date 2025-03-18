@@ -39,15 +39,15 @@ async function connect() {
     // Set up Mongoose event listeners
     setupMongooseEventListeners();
     
-    // Connect to MongoDB
+    // Connect to MongoDB - removed deprecated options
     console.log('Connecting to MongoDB...');
-    await mongoose.connect(uri, config.mongodb.options);
+    await mongoose.connect(uri);
     
     isConnected = true;
     isConnecting = false;
     connectionRetries = 0;
     
-    console.log('MongoDB connected successfully');
+    console.log('Mongoose connected to MongoDB');
     return mongoose.connection;
   } catch (error) {
     isConnecting = false;

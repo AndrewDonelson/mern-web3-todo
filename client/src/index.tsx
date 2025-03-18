@@ -11,7 +11,6 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import './global.css';
 import reportWebVitals from './reportWebVitals';
-import { ThemeProvider } from './components/theme-provider';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -19,11 +18,9 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <ThemeProvider defaultTheme="system" storageKey="web3-todo-theme">
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </ThemeProvider>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </React.StrictMode>
 );
 

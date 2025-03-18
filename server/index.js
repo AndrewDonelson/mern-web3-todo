@@ -6,102 +6,104 @@
 // copyright: 2025, Andrew Donelson
 
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
 const { Web3 } = require('web3');
 const path = require('path');
 const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
+const { initialize, shutdown } = require('./init');
+const { User } = require('./models'); // Import models from models directory
 require('dotenv').config();
 
 // Initialize express app
 const app = express();
 
 // Security and optimization middleware
-app.use(helmet()); // Helps secure Express apps with various HTTP headers
-app.use(compression()); // Compress responses
-app.use(morgan('combined')); // HTTP request logger
+app.use(helmet());
+app.use(compression());
+app.use(morgan('combined'));
 
 // Basic middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// MongoDB connection with retry logic
-const connectDB = async () => {
-  const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/web3todo';
-  const MAX_RETRIES = 5;
-  let retries = 0;
-  
-  while (retries < MAX_RETRIES) {
-    try {
-      await mongoose.connect(MONGODB_URI);
-      console.log('MongoDB connected successfully');
-      return;
-    } catch (err) {
-      retries++;
-      console.error(`MongoDB connection attempt ${retries} failed:`, err.message);
-      // Wait before trying again - exponential backoff
-      await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, retries)));
-    }
+// Global Web3 instance
+let web3;
+let contracts = {};
+
+// Initialize system and connect to services
+const startupSystem = async () => {
+  try {
+    // Connect to blockchain
+    const BLOCKCHAIN_URI = process.env.BLOCKCHAIN_URI || 'http://localhost:8545';
+    web3 = new Web3(BLOCKCHAIN_URI);
+    console.log('Web3 connected to', BLOCKCHAIN_URI);
+    
+    // Initialize MongoDB and other services via init.js
+    await initialize(web3);
+    
+    // Load contracts
+    await loadContracts();
+    
+    // Make web3 and contracts available globally
+    global.web3 = web3;
+    global.contracts = contracts;
+    
+  } catch (error) {
+    console.error('System startup failed:', error);
+    process.exit(1);
   }
-  
-  console.error('Failed to connect to MongoDB after maximum retries');
-  process.exit(1);
 };
 
-connectDB();
-
-// Connect to blockchain with error handling
-let web3;
-try {
-  const BLOCKCHAIN_URI = process.env.BLOCKCHAIN_URI || 'http://localhost:8545';
-  web3 = new Web3(BLOCKCHAIN_URI);
-  console.log('Web3 connected to', BLOCKCHAIN_URI);
-} catch (error) {
-  console.error('Failed to connect to blockchain:', error.message);
-}
-
-// Load the compiled contract with error handling
-let TodoListContract;
-try {
-  const TodoList = require('../build/contracts/TodoList.json');
-  const networkId = process.env.NETWORK_ID || '5777'; // Default Ganache network ID
-  
-  const deployedNetwork = TodoList.networks[networkId];
-  if (!deployedNetwork) {
-    throw new Error(`Contract not deployed to network ID ${networkId}`);
+// Load blockchain contracts
+const loadContracts = async () => {
+  try {
+    // Load TodoList contract
+    const TodoList = require('../build/contracts/TodoList.json');
+    
+    // Get network ID from chain
+    const networkId = await web3.eth.net.getId();
+    console.log(`Connected to network ID: ${networkId}`);
+    
+    // Try to get deployment info for the connected network
+    const deployedNetwork = TodoList.networks[networkId.toString()];
+    if (!deployedNetwork) {
+      console.warn(`TodoList contract not deployed to detected network ID ${networkId}`);
+      return;
+    }
+    
+    // Create contract instance
+    contracts.TodoList = new web3.eth.Contract(
+      TodoList.abi,
+      deployedNetwork.address
+    );
+    
+    console.log('TodoList contract loaded at address:', deployedNetwork.address);
+    
+    // Load DBVerification contract if exists
+    try {
+      const DBVerification = require('../build/contracts/DBVerification.json');
+      const dbVerificationNetwork = DBVerification.networks[networkId.toString()];
+      
+      if (dbVerificationNetwork) {
+        contracts.DBVerification = new web3.eth.Contract(
+          DBVerification.abi,
+          dbVerificationNetwork.address
+        );
+        console.log('DBVerification contract loaded at address:', dbVerificationNetwork.address);
+      } else {
+        console.warn(`DBVerification contract not deployed to network ID ${networkId}`);
+      }
+    } catch (error) {
+      console.warn('DBVerification contract not available:', error.message);
+    }
+    
+  } catch (error) {
+    console.error('Failed to load contracts:', error.message);
   }
-  
-  TodoListContract = new web3.eth.Contract(
-    TodoList.abi,
-    deployedNetwork.address
-  );
-  
-  console.log('Contract loaded at address:', deployedNetwork.address);
-} catch (error) {
-  console.error('Failed to load contract:', error.message);
-}
-
-// Define models
-const User = mongoose.model('User', {
-  address: { 
-    type: String, 
-    required: true, 
-    unique: true,
-    trim: true 
-  },
-  name: { 
-    type: String, 
-    required: true,
-    trim: true 
-  },
-  createdAt: { 
-    type: Date, 
-    default: Date.now 
-  }
-});
+};
 
 // Routes
 app.get('/api/health', (req, res) => {
@@ -109,7 +111,7 @@ app.get('/api/health', (req, res) => {
     status: 'ok',
     mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
     web3: web3 ? 'connected' : 'disconnected',
-    contract: TodoListContract ? 'loaded' : 'not loaded'
+    contracts: Object.keys(contracts)
   });
 });
 
@@ -150,16 +152,16 @@ app.post('/api/users', async (req, res) => {
 
 // Contract interaction routes
 app.get('/api/tasks', async (req, res) => {
-  if (!TodoListContract) {
-    return res.status(503).json({ message: 'Contract not available' });
+  if (!contracts.TodoList) {
+    return res.status(503).json({ message: 'TodoList contract not available' });
   }
   
   try {
-    const taskCount = await TodoListContract.methods.taskCount().call();
+    const taskCount = await contracts.TodoList.methods.taskCount().call();
     const tasks = [];
     
     for (let i = 1; i <= taskCount; i++) {
-      const task = await TodoListContract.methods.tasks(i).call();
+      const task = await contracts.TodoList.methods.tasks(i).call();
       tasks.push({
         id: task.id,
         content: task.content,
@@ -177,9 +179,7 @@ app.get('/api/tasks', async (req, res) => {
 
 // Production setup - Serve static assets if in production
 if (process.env.NODE_ENV === 'production') {
-  // Set static folder
   app.use(express.static(path.join(__dirname, '../client/build')));
-
   app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
   });
@@ -191,24 +191,27 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'Something went wrong!' });
 });
 
-// Start server
-const PORT = process.env.PORT || 5000;
-const server = app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
-// Handle unhandled promise rejections
-process.on('unhandledRejection', (err) => {
-  console.error('Unhandled Rejection:', err);
-  // Close server & exit process
-  server.close(() => process.exit(1));
-});
-
-// Graceful shutdown
-process.on('SIGTERM', () => {
-  console.log('SIGTERM received, shutting down gracefully');
-  server.close(() => {
-    console.log('Process terminated');
-    mongoose.connection.close(false, () => {
+// Start the system and server
+(async () => {
+  await startupSystem();
+  
+  // Start server
+  const PORT = process.env.PORT || 5000;
+  const server = app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  
+  // Handle unhandled promise rejections
+  process.on('unhandledRejection', (err) => {
+    console.error('Unhandled Rejection:', err);
+    server.close(() => process.exit(1));
+  });
+  
+  // Graceful shutdown
+  process.on('SIGTERM', () => {
+    console.log('SIGTERM received, shutting down gracefully');
+    server.close(async () => {
+      console.log('HTTP server closed');
+      await shutdown();
       process.exit(0);
     });
   });
-});
+})();
