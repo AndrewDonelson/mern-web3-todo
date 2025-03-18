@@ -22,17 +22,7 @@ import { DashboardLayout } from '@/components/Dashboard/DashboardLayout';
 import { StatCard } from '@/components/Dashboard/StatCard';
 import { RecentTasksList } from '@/components/Dashboard/RecentTasksList';
 import { CreateTaskDialog } from '@/components/Dashboard/CreateTaskDialog';
-
-// Type definition for window.ethereum
-declare global {
-  interface Window {
-    ethereum?: {
-      request: (args: { method: string; params?: any[] }) => Promise<any>;
-      isMetaMask?: boolean;
-      isCoinbaseWallet?: boolean;
-    };
-  }
-}
+import { useAuth } from '@/contexts/AuthContext';
 
 // Mock data for statistics
 const mockStats = [
@@ -44,6 +34,7 @@ const mockStats = [
 
 const Dashboard: React.FC = () => {
   const { toast } = useToast();
+  const { user } = useAuth();
   const [isWalletConnected, setIsWalletConnected] = useState(false);
   const [isCreateTaskOpen, setIsCreateTaskOpen] = useState(false);
   const [walletAddress, setWalletAddress] = useState<string>('');
@@ -105,8 +96,14 @@ const Dashboard: React.FC = () => {
       }
     };
 
-    checkConnection();
-  }, [toast]);
+    // If we already have a user from auth context, use their wallet address
+    if (user) {
+      setIsWalletConnected(true);
+      setWalletAddress(user.walletAddress);
+    } else {
+      checkConnection();
+    }
+  }, [toast, user]);
 
   const handleCreateTask = () => {
     setIsCreateTaskOpen(true);
@@ -118,7 +115,7 @@ const Dashboard: React.FC = () => {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
           <p className="text-muted-foreground">
-            Welcome back! Here's an overview of your tasks.
+            Welcome back{user?.username ? `, ${user.username}` : ''}! Here's an overview of your tasks.
           </p>
         </div>
         <Button onClick={handleCreateTask} className="gap-1">

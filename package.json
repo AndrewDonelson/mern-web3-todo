@@ -17,7 +17,9 @@
     "test": "npm-run-all --sequential test:*",
     "test:contract": "truffle test",
     "test:client": "cd client && npm run test",
-    "test:server": "cd server && npm run test"
+    "test:server": "cd server && npm run test",
+    "deploy:contracts": "node scripts/deploy-contracts.js",
+    "deploy:ganache": "truffle migrate --reset --network development && npm run deploy:contracts"
   },
   "dependencies": {
     "concurrently": "^9.1.2",

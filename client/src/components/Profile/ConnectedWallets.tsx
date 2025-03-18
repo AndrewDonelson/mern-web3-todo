@@ -19,17 +19,6 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { formatWalletAddress, copyToClipboard } from '@/lib/utils';
 
-// Type definition for window.ethereum
-declare global {
-  interface Window {
-    ethereum?: {
-      request: (args: { method: string; params?: any[] }) => Promise<any>;
-      isMetaMask?: boolean;
-      isCoinbaseWallet?: boolean;
-    };
-  }
-}
-
 // Type for wallet data
 interface WalletData {
   id: string;

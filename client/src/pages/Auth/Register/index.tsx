@@ -16,21 +16,12 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { AuthLayout } from '@/components/Auth/AuthLayout';
-
-// Type definition for window.ethereum
-declare global {
-  interface Window {
-    ethereum?: {
-      request: (args: { method: string; params?: any[] }) => Promise<any>;
-      isMetaMask?: boolean;
-      isCoinbaseWallet?: boolean;
-    };
-  }
-}
+import { useAuth } from '@/contexts/AuthContext';
 
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { register } = useAuth();
   const [username, setUsername] = useState('');
   const [isConnecting, setIsConnecting] = useState(false);
   const [step, setStep] = useState<'info' | 'wallet'>('info');
@@ -84,34 +75,11 @@ const RegisterPage: React.FC = () => {
       
       const account = accounts[0] as string;
 
-      // Get signature to verify ownership
-      const message = `Web3 Todo Registration Request for ${username}\nNonce: ${Date.now()}`;
-      const signature = await window.ethereum.request({
-        method: 'personal_sign',
-        params: [message, account],
-      });
+      // Use the AuthContext's register function
+      await register(username, account);
 
-      if (!signature) {
-        toast({
-          title: "Authentication failed",
-          description: "Failed to authenticate. Please try again.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      // In a real app, you would send this data to your backend
-      // For now, we'll just simulate a successful registration
-      toast({
-        title: "Registration successful",
-        description: "Your account has been created.",
-        variant: "success",
-      });
-
-      // Redirect to dashboard
-      setTimeout(() => {
-        navigate('/dashboard');
-      }, 1500);
+      // Redirect to dashboard after successful registration
+      navigate('/dashboard');
 
     } catch (error: any) {
       console.error("Registration error:", error);

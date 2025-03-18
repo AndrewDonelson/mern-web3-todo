@@ -14,21 +14,12 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { AuthLayout } from '@/components/Auth/AuthLayout';
-
-// Type definition for window.ethereum
-declare global {
-  interface Window {
-    ethereum?: {
-      request: (args: { method: string; params?: any[] }) => Promise<any>;
-      isMetaMask?: boolean;
-      isCoinbaseWallet?: boolean;
-    };
-  }
-}
+import { useAuth } from '@/contexts/AuthContext';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { login } = useAuth();
   const [isConnecting, setIsConnecting] = useState(false);
 
   const handleLoginWithWallet = async () => {
@@ -60,34 +51,11 @@ const LoginPage: React.FC = () => {
       
       const account = accounts[0] as string;
 
-      // Get signature to verify ownership (simplified for now)
-      const message = `Web3 Todo Login Request\nNonce: ${Date.now()}`;
-      const signature = await window.ethereum.request({
-        method: 'personal_sign',
-        params: [message, account],
-      });
+      // Use the AuthContext's login function
+      await login(account);
 
-      if (!signature) {
-        toast({
-          title: "Authentication failed",
-          description: "Failed to authenticate. Please try again.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      // In a real app, you would send this signature to your backend for verification
-      // For now, we'll just simulate a successful login
-      toast({
-        title: "Login successful",
-        description: "Welcome back!",
-      });
-
-      // Redirect to dashboard
-      setTimeout(() => {
-        navigate('/dashboard');
-      }, 1000);
-
+      // Redirect to dashboard after successful login
+      navigate('/dashboard');
     } catch (error: any) {
       console.error("Login error:", error);
       toast({

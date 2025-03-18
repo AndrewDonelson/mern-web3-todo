@@ -1,12 +1,11 @@
-// file: client/src/types/window.d.ts
-// description: Type declarations for window ethereum object
+// file: client/src/types/metamask.d.ts
+// description: Type declarations for MetaMask provider
 // module: Client
 // License: MIT
 // Author: Andrew Donelson
 // Copyright 2025 Andrew Donelson
 
-declare global {
-  interface Window {
+interface Window {
     ethereum?: {
       request: (args: { method: string; params?: any[] }) => Promise<any>;
       isMetaMask?: boolean;
@@ -15,6 +14,3 @@ declare global {
       removeListener: (event: string, callback: (...args: any[]) => void) => void;
     };
   }
-}
-
-export {};
