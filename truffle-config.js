@@ -8,13 +8,9 @@
 module.exports = {
   networks: {
 
-    
-    
-    
-    
     development: {
-      host: "127.0.0.1",
-      port: 8545,
+      host: "localhost",
+      port: 7545,
       network_id: 1337,
       from: "0x2644c2E180A602CE3bEF09fB959EAd7188776BFb", // First generated account
       gas: 6721975,

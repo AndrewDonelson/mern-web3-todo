@@ -11,7 +11,7 @@ const path = require('path');
 const Web3 = require('web3');
 
 // Configuration
-const GANACHE_PORT = 8545;
+const GANACHE_PORT = 7545;
 const GANACHE_HOST = 'localhost';
 const NETWORK_ID = 1337;
 const MNEMONIC = 'laugh cabbage leisure stable dwarf donate near provide cannon venture silver achieve';

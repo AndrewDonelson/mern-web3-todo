@@ -37,7 +37,7 @@ let contracts = {};
 const startupSystem = async () => {
   try {
     // Connect to blockchain
-    const BLOCKCHAIN_URI = process.env.BLOCKCHAIN_URI || 'http://localhost:8545';
+    const BLOCKCHAIN_URI = process.env.BLOCKCHAIN_URI || 'http://localhost:7545';
     web3 = new Web3(BLOCKCHAIN_URI);
     console.log('Web3 connected to', BLOCKCHAIN_URI);
     

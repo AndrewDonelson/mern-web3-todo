@@ -15,7 +15,7 @@ const DBVerificationABI = require('../contracts/DBVerification.json').abi;
 class BlockchainVerificationService {
   constructor() {
     // Initialize web3 with the provider from environment variables
-    this.web3 = new Web3(process.env.BLOCKCHAIN_URI || 'http://localhost:8545');
+    this.web3 = new Web3(process.env.BLOCKCHAIN_URI || 'http://localhost:7545');
     
     // Initialize the contract instance
     this.contract = new this.web3.eth.Contract(

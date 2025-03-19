@@ -20,7 +20,7 @@ try {
 }
 
 // Connect to the specified blockchain network
-const web3 = new Web3(process.env.BLOCKCHAIN_URI || 'http://localhost:8545');
+const web3 = new Web3(process.env.BLOCKCHAIN_URI || 'http://localhost:7545');
 
 /**
  * Deploy the TodoList contract

@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "concurrently --kill-others-on-fail --names \"BLOCKCHAIN,BACKEND,FRONTEND\" --prefix-colors \"yellow,blue,green\" \"npm run dev:blockchain\" \"sleep 5 && npm run dev:backend\" \"sleep 7 && npm run dev:frontend\"",
+    "dev-NOBC": "concurrently --kill-others-on-fail --names \"BACKEND,FRONTEND\" --prefix-colors \"blue,green\" \"sleep 5 && npm run dev:backend\" \"sleep 7 && npm run dev:frontend\"",
     "dev:frontend": "cd client && npm run start",
     "dev:backend": "cd server && nodemon index.js",
-    "dev:blockchain": "ganache-cli --networkId 1337",
+    "dev:blockchain": "ganache-cli --port 7545 --networkId 1337",
     "install:all": "npm install && npm run install:client && npm run install:server",
     "install:client": "cd client && npm install",
     "install:server": "cd server && npm install",

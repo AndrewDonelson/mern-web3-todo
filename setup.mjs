@@ -254,7 +254,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/web3todo'
 .catch(err => console.log(err));
 
 // Connect to local blockchain
-const web3 = new Web3(process.env.BLOCKCHAIN_URI || 'http://localhost:8545');
+const web3 = new Web3(process.env.BLOCKCHAIN_URI || 'http://localhost:7545');
 
 // Load the compiled contract JSON
 const TodoList = require('../build/contracts/TodoList.json');
@@ -379,7 +379,7 @@ async function collectSettings(rl) {
 
     for (const [key, prompt] of Object.entries(prompts)) {
         const defaultValue = currentVars[key] || (key === 'MONGODB_URI' ? 'mongodb://localhost:27017/web3todo' :
-            key === 'BLOCKCHAIN_URI' ? 'http://localhost:8545' :
+            key === 'BLOCKCHAIN_URI' ? 'http://localhost:7545' :
                 key === 'PORT' ? '5000' : '');
         const defaultDisplay = defaultValue ? ` (${defaultValue})` : '';
         const response = await question(rl, `${prompt}${defaultDisplay}: `);

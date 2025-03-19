@@ -42,7 +42,7 @@ const config = {
   // Blockchain Configuration
   blockchain: {
     // URI for the blockchain provider (e.g., local node, Infura, etc.)
-    uri: process.env.BLOCKCHAIN_URI || 'http://localhost:8545',
+    uri: process.env.BLOCKCHAIN_URI || 'http://localhost:7545',
     // Default account to use for transactions
     defaultAccount: process.env.DEFAULT_ACCOUNT,
     // Smart contract addresses
