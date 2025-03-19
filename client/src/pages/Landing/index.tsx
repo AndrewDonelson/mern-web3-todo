@@ -101,19 +101,24 @@ const LandingPage: React.FC = () => {
           </div>
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             <FeatureCard
+              title="Wallet Authentication"
+              description="No username or password needed. Connect with your crypto wallet for secure login."
+              Icon={Wallet}
+            />
+            <FeatureCard
               title="Immutable Records"
               description="Store your tasks securely on the blockchain with permanent records that can't be altered."
               Icon={Shield}
             />
             <FeatureCard
-              title="Decentralized Storage"
-              description="Your tasks are stored across a distributed network, eliminating single points of failure."
+              title="MongoDB Storage"
+              description="Your tasks are securely stored in MongoDB, providing reliable and scalable data persistence with blockchain verification."
               Icon={Database}
             />
             <FeatureCard
-              title="Wallet Authentication"
-              description="No username or password needed. Connect with your crypto wallet for secure login."
-              Icon={Wallet}
+              title="Blockchain Verification"
+              description="Our hybrid storage approach verifies data integrity using blockchain hashing while keeping costs low by storing content in MongoDB."
+              Icon={Shield}
             />
             <FeatureCard
               title="Task Prioritization"
@@ -124,11 +129,6 @@ const LandingPage: React.FC = () => {
               title="Collaborative Tasks"
               description="Share and assign tasks to team members for better collaboration."
               Icon={Users}
-            />
-            <FeatureCard
-              title="Dark Mode Support"
-              description="Easy on the eyes with full dark mode support for late-night productivity."
-              Icon={Moon}
             />
           </div>
         </section>

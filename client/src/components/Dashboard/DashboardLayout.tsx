@@ -6,7 +6,7 @@
 // Copyright 2025 Andrew Donelson
 
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   ListTodo, 
@@ -38,6 +38,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useToast } from '@/hooks/use-toast';
 import { formatWalletAddress } from '@/lib/utils';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -54,29 +55,47 @@ const navItems = [
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const { toast } = useToast();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
-  // Mock user data - in a real app, this would come from a context or store
-  const user = {
-    name: 'Andrew Donelson',
-    walletAddress: '0x71C7656EC7ab88b098defB751B7401B5f6d8976F', 
-    avatarUrl: '',
-  };
+  // Use real user data from AuthContext
+  const { user, logout } = useAuth();
+
+  // If user isn't authenticated, we shouldn't show this layout
+  if (!user) {
+    // Redirect to login in a real app
+    navigate('/login');
+    return null;
+  }
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  const handleLogout = () => {
-    // In a real app, you would implement proper logout logic here
-    toast({
-      title: "Logged out",
-      description: "You have been successfully logged out.",
-    });
-    
-    // Redirect to home page (would be handled by a router in a real implementation)
-    window.location.href = '/';
+  const handleLogout = async () => {
+    try {
+      await logout();
+      toast({
+        title: "Logged out",
+        description: "You have been successfully logged out.",
+      });
+      navigate('/');
+    } catch (error) {
+      toast({
+        title: "Logout failed",
+        description: "There was an issue logging out. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Get display name for avatar fallback
+  const getInitials = () => {
+    if (user.username) {
+      return user.username.slice(0, 2).toUpperCase();
+    }
+    return "WA"; // Wallet Address fallback
   };
 
   return (
@@ -123,8 +142,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
                   aria-label="Open user menu"
                 >
                   <Avatar>
-                    <AvatarImage src={user.avatarUrl} alt={user.name} />
-                    <AvatarFallback>{user.name.slice(0, 2).toUpperCase()}</AvatarFallback>
+                    <AvatarImage src={user.profileImageUrl} alt={user.username} />
+                    <AvatarFallback>{getInitials()}</AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
@@ -132,7 +151,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <div className="px-2 py-1.5">
-                  <p className="text-sm font-medium">{user.name}</p>
+                  <p className="text-sm font-medium">{user.username}</p>
                   <p className="text-xs text-muted-foreground">{formatWalletAddress(user.walletAddress)}</p>
                 </div>
                 <DropdownMenuSeparator />
@@ -221,11 +240,11 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
               <div className="mt-4 flex flex-col">
                 <div className="flex items-center gap-2 py-4">
                   <Avatar>
-                    <AvatarImage src={user.avatarUrl} alt={user.name} />
-                    <AvatarFallback>{user.name.slice(0, 2).toUpperCase()}</AvatarFallback>
+                    <AvatarImage src={user.profileImageUrl} alt={user.username} />
+                    <AvatarFallback>{getInitials()}</AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="text-sm font-medium">{user.name}</p>
+                    <p className="text-sm font-medium">{user.username}</p>
                     <p className="text-xs text-muted-foreground">
                       {formatWalletAddress(user.walletAddress)}
                     </p>

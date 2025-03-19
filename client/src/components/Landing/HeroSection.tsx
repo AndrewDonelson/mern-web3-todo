@@ -24,10 +24,10 @@ export const HeroSection: React.FC = () => {
           <div className="mt-4 space-y-4">
             <h1 className="animate-fade-in-up font-heading text-4xl font-bold md:text-5xl lg:text-6xl">
               <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">Web3</span> Todo
-              <span className="text-primary"> for the decentralized world</span>
+              <span className="text-primary"> for the "so-so" decentralized world</span>
             </h1>
             <p className="animate-fade-in-up text-xl text-muted-foreground [animation-delay:200ms] md:text-2xl">
-              Securely manage your tasks on the blockchain with our decentralized todo application.
+            Securely manage your tasks with our commitment-phobic app: decentralized enough for the crypto-bros, centralized enough for people who actually want their data to load this century.
             </p>
           </div>
 
@@ -107,7 +107,7 @@ export const HeroSection: React.FC = () => {
           <div className="mt-12 animate-fade-in-up [animation-delay:800ms]">
             <p className="mb-4 text-center text-sm text-muted-foreground">Trusted by developers and teams worldwide</p>
             <div className="flex flex-wrap items-center justify-center gap-8">
-              {["Blockchain Verified", "256-bit Encryption", "Decentralized Storage", "Smart Contract Powered"].map((item, index) => (
+              {["Blockchain Verified", "256-bit Encryption", "MongoDB Storage", "Smart Contract Powered"].map((item, index) => (
                 <div key={index} className="flex items-center gap-2">
                   <div className="h-2 w-2 rounded-full bg-primary"></div>
                   <span className="text-sm font-medium">{item}</span>
