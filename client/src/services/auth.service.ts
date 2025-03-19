@@ -7,6 +7,7 @@
 
 import axios from 'axios';
 import { apiClient } from './api';
+import { localStorageService } from './localstorage.service';
 
 export interface AuthUser {
   id: string;
@@ -62,14 +63,9 @@ class AuthService {
    * Load user data from local storage
    */
   private loadUserFromStorage(): void {
-    const userJson = localStorage.getItem(this.USER_KEY);
-    if (userJson) {
-      try {
-        this.currentUser = JSON.parse(userJson);
-      } catch (error) {
-        console.error('Failed to parse user from storage:', error);
-        this.clearAuth();
-      }
+    const user = localStorageService.getItem<AuthUser>(this.USER_KEY);
+    if (user) {
+      this.currentUser = user;
     }
   }
 
@@ -78,8 +74,8 @@ class AuthService {
    * @param data Login response data
    */
   private saveAuthData(data: LoginResponse): void {
-    localStorage.setItem(this.TOKEN_KEY, data.token);
-    localStorage.setItem(this.USER_KEY, JSON.stringify(data.user));
+    localStorageService.setRawItem(this.TOKEN_KEY, data.token);
+    localStorageService.setItem<AuthUser>(this.USER_KEY, data.user);
     this.currentUser = data.user;
     
     // Set the token in the API client for future requests
@@ -90,8 +86,8 @@ class AuthService {
    * Clear authentication data
    */
   public clearAuth(): void {
-    localStorage.removeItem(this.TOKEN_KEY);
-    localStorage.removeItem(this.USER_KEY);
+    localStorageService.removeItem(this.TOKEN_KEY);
+    localStorageService.removeItem(this.USER_KEY);
     this.currentUser = null;
     
     // Clear token from API client
@@ -103,7 +99,7 @@ class AuthService {
    * @returns Auth token or null if not authenticated
    */
   public getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
+    return localStorageService.getRawItem(this.TOKEN_KEY);
   }
 
   /**
@@ -204,7 +200,7 @@ class AuthService {
       
       // Update local storage with new user data
       const updatedUser = { ...this.currentUser, ...response.user };
-      localStorage.setItem(this.USER_KEY, JSON.stringify(updatedUser));
+      localStorageService.setItem<AuthUser>(this.USER_KEY, updatedUser);
       this.currentUser = updatedUser;
       
       return updatedUser;
@@ -229,7 +225,7 @@ class AuthService {
       
       // Update user data with latest from server
       this.currentUser = response.user;
-      localStorage.setItem(this.USER_KEY, JSON.stringify(response.user));
+      localStorageService.setItem<AuthUser>(this.USER_KEY, response.user);
       
       return true;
     } catch (error) {

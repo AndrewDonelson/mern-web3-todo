@@ -158,8 +158,8 @@ const updatedProfile = await apiClient.post('/api/profiles', {
     github: "https://github.com/...",
   },
   preferences: {
-    theme: "dark", // "light", "dark", "system"
-    emailNotifications: true,
+    theme: "system", // "light", "dark", "system"
+    emailNotifications: false,
     displayWalletAddress: true
   }
 });

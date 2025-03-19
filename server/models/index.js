@@ -5,12 +5,10 @@
 // Author: Andrew Donelson
 // Copyright 2025 Andrew Donelson
 
-const User = require('./User');
-const Profile = require('./Profile');
+const Account = require('./Account');
 const Todo = require('./Todo');
 
 module.exports = {
-  User,
-  Profile,
+  Account,
   Todo
 };
