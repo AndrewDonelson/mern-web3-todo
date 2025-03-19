@@ -5,8 +5,18 @@
 // Author: Andrew Donelson
 // Copyright 2025 Andrew Donelson
 
-const Web3 = require('web3');
-const DBVerificationABI = require('../contracts/DBVerification.json').abi;
+const { Web3 } = require('web3'); // Fixed import syntax for newer Web3.js versions
+let DBVerificationABI;
+
+// Try to load the ABI, but don't crash if it's not found
+try {
+  // First try to load from build directory (where it would be after compilation)
+  DBVerificationABI = require('../../build/contracts/DBVerification.json').abi;
+} catch (error) {
+  console.warn('DBVerification.json not found in build directory. Using empty ABI.');
+  // Provide a minimal ABI structure to avoid further errors
+  DBVerificationABI = [];
+}
 
 /**
  * Blockchain Verification Service
@@ -14,17 +24,33 @@ const DBVerificationABI = require('../contracts/DBVerification.json').abi;
  */
 class BlockchainVerificationService {
   constructor() {
-    // Initialize web3 with the provider from environment variables
-    this.web3 = new Web3(process.env.BLOCKCHAIN_URI || 'http://localhost:7545');
-    
-    // Initialize the contract instance
-    this.contract = new this.web3.eth.Contract(
-      DBVerificationABI,
-      process.env.VERIFICATION_CONTRACT_ADDRESS
-    );
-    
-    // Account to use for transactions (can be overridden in methods)
-    this.defaultAccount = process.env.DEFAULT_ACCOUNT;
+    try {
+      // Initialize web3 with the provider from environment variables
+      this.web3 = new Web3(process.env.BLOCKCHAIN_URI || 'http://localhost:7545');
+      
+      // Initialize the contract instance only if we have the address
+      if (process.env.VERIFICATION_CONTRACT_ADDRESS) {
+        this.contract = new this.web3.eth.Contract(
+          DBVerificationABI,
+          process.env.VERIFICATION_CONTRACT_ADDRESS
+        );
+      } else {
+        console.warn('VERIFICATION_CONTRACT_ADDRESS not set in environment variables. Blockchain verification disabled.');
+        this.contract = null;
+      }
+      
+      // Account to use for transactions (can be overridden in methods)
+      this.defaultAccount = process.env.DEFAULT_ACCOUNT;
+      
+      this.isEnabled = !!this.contract && DBVerificationABI.length > 0;
+      if (!this.isEnabled) {
+        console.warn('Blockchain verification service is disabled due to missing contract or ABI.');
+      }
+    } catch (error) {
+      console.error('Failed to initialize blockchain verification service:', error);
+      this.isEnabled = false;
+      this.contract = null;
+    }
   }
   
   /**
@@ -35,6 +61,16 @@ class BlockchainVerificationService {
    * @returns {Promise<Object>} Verification result
    */
   async verifyDocument(document, tableId, account = this.defaultAccount) {
+    // Check if service is enabled
+    if (!this.isEnabled) {
+      console.warn('Blockchain verification attempted but service is disabled');
+      return {
+        success: false,
+        message: 'Blockchain verification service is disabled',
+        mockMode: true
+      };
+    }
+    
     try {
       // Ensure the document has a generateVerificationData method
       if (!document.generateVerificationData || typeof document.generateVerificationData !== 'function') {
@@ -87,6 +123,17 @@ class BlockchainVerificationService {
    * @returns {Promise<Object>} Batch verification result
    */
   async verifyDocumentBatch(documents, tableId, account = this.defaultAccount) {
+    // Check if service is enabled
+    if (!this.isEnabled) {
+      console.warn('Blockchain batch verification attempted but service is disabled');
+      return {
+        success: false,
+        message: 'Blockchain verification service is disabled',
+        mockMode: true,
+        count: documents.length
+      };
+    }
+    
     try {
       // Generate a unique batch ID
       const batchId = this.web3.utils.keccak256(Date.now().toString());
@@ -157,6 +204,17 @@ class BlockchainVerificationService {
    * @returns {Promise<Object>} Verification result
    */
   async checkDocumentIntegrity(document, tableId) {
+    // Check if service is enabled
+    if (!this.isEnabled) {
+      console.warn('Blockchain integrity check attempted but service is disabled');
+      return {
+        verified: false,
+        status: 'SERVICE_DISABLED',
+        message: 'Blockchain verification service is disabled',
+        mockMode: true
+      };
+    }
+    
     try {
       const recordId = document._id.toString();
       
@@ -201,6 +259,16 @@ class BlockchainVerificationService {
    * @returns {Promise<Object>} Archive result
    */
   async archiveDocumentVerification(document, tableId, account = this.defaultAccount) {
+    // Check if service is enabled
+    if (!this.isEnabled) {
+      console.warn('Blockchain archive attempted but service is disabled');
+      return {
+        success: false,
+        message: 'Blockchain verification service is disabled',
+        mockMode: true
+      };
+    }
+    
     try {
       const recordId = document._id.toString();
       
@@ -241,6 +309,16 @@ class BlockchainVerificationService {
    * @returns {Promise<Object>} Delete result
    */
   async deleteDocumentVerification(document, tableId, account = this.defaultAccount) {
+    // Check if service is enabled
+    if (!this.isEnabled) {
+      console.warn('Blockchain deletion attempted but service is disabled');
+      return {
+        success: false,
+        message: 'Blockchain verification service is disabled',
+        mockMode: true
+      };
+    }
+    
     try {
       const recordId = document._id.toString();
       
@@ -270,6 +348,14 @@ class BlockchainVerificationService {
       console.error('Blockchain verification deletion error:', error);
       throw new Error(`Failed to delete document verification: ${error.message}`);
     }
+  }
+  
+  /**
+   * Check if the blockchain verification service is enabled
+   * @returns {boolean} True if the service is enabled
+   */
+  isServiceEnabled() {
+    return this.isEnabled;
   }
 }
 

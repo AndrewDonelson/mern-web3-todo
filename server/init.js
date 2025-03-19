@@ -7,7 +7,7 @@
 
 const mongooseConnector = require('./db/mongoose');
 const healthMonitor = require('./services/healthMonitor');
-const { User } = require('./models');
+const { Account } = require('./models'); // Updated to use Account instead of User
 const config = require('./config/database');
 
 /**
@@ -45,7 +45,7 @@ async function initialize() {
 async function ensureAdminUser() {
   try {
     // Check if any admin user exists
-    const adminCount = await User.countDocuments({ isAdmin: true });
+    const adminCount = await Account.countDocuments({ isAdmin: true });
     
     if (adminCount === 0 && process.env.CREATE_DEFAULT_ADMIN === 'true') {
       console.log('No admin users found. Creating default admin user...');
@@ -59,7 +59,7 @@ async function ensureAdminUser() {
       }
       
       // Create default admin user
-      const adminUser = new User({
+      const adminUser = new Account({
         username: 'admin',
         walletAddress: defaultAdminWallet.toLowerCase(),
         isAdmin: true,

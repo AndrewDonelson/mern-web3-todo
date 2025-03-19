@@ -12,9 +12,13 @@ const path = require('path');
 const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
+const mongoose = require('mongoose');
 const { initialize, shutdown } = require('./init');
-const { User } = require('./models'); // Import models from models directory
 require('dotenv').config();
+
+// Import route files
+const healthRoutes = require('./routes/health.routes');
+const accountRoutes = require('./routes/account.routes');
 
 // Initialize express app
 const app = express();
@@ -105,7 +109,7 @@ const loadContracts = async () => {
   }
 };
 
-// Routes
+// Basic health check route
 app.get('/api/health', (req, res) => {
   res.status(200).json({ 
     status: 'ok',
@@ -115,40 +119,9 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// User routes
-app.get('/api/users', async (req, res) => {
-  try {
-    const users = await User.find().select('-__v');
-    res.json(users);
-  } catch (err) {
-    console.error('Error fetching users:', err);
-    res.status(500).json({ message: 'Server error while fetching users' });
-  }
-});
-
-app.post('/api/users', async (req, res) => {
-  const { address, name } = req.body;
-  
-  // Validation
-  if (!address || !name) {
-    return res.status(400).json({ message: 'Address and name are required' });
-  }
-  
-  try {
-    // Check if user already exists
-    const existingUser = await User.findOne({ address });
-    if (existingUser) {
-      return res.status(400).json({ message: 'User with this address already exists' });
-    }
-    
-    const user = new User({ address, name });
-    const newUser = await user.save();
-    res.status(201).json(newUser);
-  } catch (err) {
-    console.error('Error creating user:', err);
-    res.status(500).json({ message: 'Server error while creating user' });
-  }
-});
+// Set up API routes
+app.use('/api/health', healthRoutes);
+app.use('/api/accounts', accountRoutes);
 
 // Contract interaction routes
 app.get('/api/tasks', async (req, res) => {

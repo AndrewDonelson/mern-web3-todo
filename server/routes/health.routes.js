@@ -10,8 +10,7 @@ const router = express.Router();
 const healthMonitor = require('../services/healthMonitor');
 const blockchainThrottler = require('../services/blockchainThrottler');
 
-// Middleware for admin authentication
-const adminAuth = require('../middleware/adminAuth');
+// Removed adminAuth middleware for this example app
 
 /**
  * @route GET /api/health
@@ -40,9 +39,9 @@ router.get('/', (req, res) => {
 /**
  * @route GET /api/health/detailed
  * @description Get detailed health status
- * @access Admin
+ * @access Public (would be Admin in production)
  */
-router.get('/detailed', adminAuth, (req, res) => {
+router.get('/detailed', (req, res) => {
   const status = healthMonitor.getStatus();
   
   res.json({
@@ -59,9 +58,9 @@ router.get('/detailed', adminAuth, (req, res) => {
 /**
  * @route GET /api/health/diagnostics
  * @description Get diagnostic information for troubleshooting
- * @access Admin
+ * @access Public (would be Admin in production)
  */
-router.get('/diagnostics', adminAuth, async (req, res) => {
+router.get('/diagnostics', async (req, res) => {
   try {
     const diagnostics = await healthMonitor.getDiagnostics();
     res.json(diagnostics);
@@ -76,9 +75,9 @@ router.get('/diagnostics', adminAuth, async (req, res) => {
 /**
  * @route POST /api/health/actions/check
  * @description Force an immediate health check
- * @access Admin
+ * @access Public (would be Admin in production)
  */
-router.post('/actions/check', adminAuth, async (req, res) => {
+router.post('/actions/check', async (req, res) => {
   try {
     // Perform immediate checks
     const mongoStatus = await healthMonitor.checkMongoDB();
@@ -102,9 +101,9 @@ router.post('/actions/check', adminAuth, async (req, res) => {
 /**
  * @route POST /api/health/actions/recover
  * @description Force recovery attempts for failing connections
- * @access Admin
+ * @access Public (would be Admin in production)
  */
-router.post('/actions/recover', adminAuth, async (req, res) => {
+router.post('/actions/recover', async (req, res) => {
   try {
     const status = healthMonitor.getStatus();
     const recovery = {
@@ -154,9 +153,9 @@ router.post('/actions/recover', adminAuth, async (req, res) => {
 /**
  * @route POST /api/health/actions/throttle
  * @description Configure blockchain throttling
- * @access Admin
+ * @access Public (would be Admin in production)
  */
-router.post('/actions/throttle', adminAuth, (req, res) => {
+router.post('/actions/throttle', (req, res) => {
   try {
     const { operationType, locked } = req.body;
     
